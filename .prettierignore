@@ -1,0 +1,6 @@
+android/
+ios/
+vendor/
+.lintstagedrc
+README.md
+tsconfig.json
