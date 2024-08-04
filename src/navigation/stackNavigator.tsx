@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RouteKeys} from './routes.ts';
 import {HomeScreen} from '../screens';
 import {StackNavigatorProps} from './types.ts';
-import {Colors} from '../common/theme/colors.ts';
+import {Colors} from '../common/theme/Colors.ts';
 
 const Stack = createNativeStackNavigator<StackNavigatorProps>();
 

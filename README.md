@@ -49,6 +49,20 @@ yarn android
 yarn android --mode release
 ```
 
+#### Install on a specific device from terminal
+
+- Launch the emulator:
+```bash
+emulator -list-avds
+emulator @<AvdId> (e.g @Pixel_7_Pro_API_34)
+```
+
+- Install the app:
+```bash
+adb devices
+yarn android --deviceId=<device_id>
+```
+
 ### For iOS
 
 #### Debug Mode
@@ -59,6 +73,12 @@ yarn ios
 #### Release Mode
 ```bash
 yarn ios --mode Release
+```
+
+#### Install on a specific device from terminal
+```bash
+xcrun xctrace list devices
+yarn ios -udid=<device_udid>
 ```
 
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
@@ -82,10 +102,30 @@ yarn release:aab
 - Open the xcode and select `Any iOS Device` from the devices list.
 - Client `Product` -> `Archive` from the menu.
 
+## Add new fonts:
+
+Place the new `..tf` files in `src/assets/fonts` and run the following command:
+
+```sh
+   npx react-native-asset
+```
+
+This command will integrate the fonts in both platforms
 
 ## Troubleshooting
 
 If something goes wrong, please refer to the [React Native documentation](https://reactnative.dev/docs/environment-setup)
+
+### Troubleshooting fonts in iOS:
+If the fonts don't work in iOS with above method, check that those enteries exist in the info.plist. If not, add entries manually.
+
+### Android Metro connection issue:
+If you get a "bridge configuration isn't available, then run the following command:
+```base
+adb reverse tcp:8081 tcp:8081
+OR 
+adb -s <AvdId> reverse tcp:8081 tcp:8081 (for a specific device)
+```
 
 ## Testing
 

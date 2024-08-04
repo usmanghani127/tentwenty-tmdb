@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
-import {Colors} from '../../common/theme/colors.ts';
+import {Colors} from '../../common/theme/Colors.ts';
+import {Fonts} from '../../common/theme/Fonts.ts';
 
 export default StyleSheet.create({
   background: {
@@ -10,7 +11,7 @@ export default StyleSheet.create({
   },
   text: {
     color: Colors.white,
-    fontWeight: 'bold',
     fontSize: 50,
+    fontFamily: Fonts.family.thin,
   },
 });
