@@ -1,1 +1,1 @@
-export {VectorIcon} from './vectorIcons';
+export {VectorIcon} from './VectorIcons';
