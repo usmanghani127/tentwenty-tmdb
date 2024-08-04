@@ -12,6 +12,9 @@ This project was created using the following version of the development tools:
 - Android Studio Koala | 2024.1.1 Patch 1
 - NDK 25.1.8937393
 
+## Env Keys:
+- Place the env keys in `.env.development` and `.env.production` files in the root of the project.
+- Define the keys' names in `src/common/types/env.d.ts` file.
 
 ## Running App
 ### Step 1: Installing dependency packages
