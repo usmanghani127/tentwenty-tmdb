@@ -7,7 +7,7 @@ export type GetUpcomingMoviesResponseType = {
   totalResults: number;
 };
 
-export type GetUpcomingMoviesArgTypes = {
+export type GetUpcomingMoviesArgType = {
   page: number;
 };
 
@@ -85,6 +85,29 @@ export type GetMovieDetailsResponseType = {
   voteCount: number;
 };
 
-export type GetMovieDetailsArgTypes = {
+export type GetMovieDetailsArgType = {
+  movieId: MovieItemType['id'];
+};
+
+export type MovieVideosType = {
+  iso6391: string;
+  iso31661: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: 'Teaser' | 'Trailer' | 'Featurette';
+  official: boolean;
+  publishedAt: string;
+  id: string;
+  url: string;
+};
+
+export type GetMovieVideosResponseType = {
+  id: number;
+  results: Array<MovieVideosType>;
+};
+
+export type GetMovieVideosArgType = {
   movieId: MovieItemType['id'];
 };

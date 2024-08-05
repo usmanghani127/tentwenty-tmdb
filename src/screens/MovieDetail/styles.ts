@@ -5,6 +5,8 @@ import {AppText, VectorIcon} from '../../components';
 import LinearGradient from 'react-native-linear-gradient';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Colors} from '../../common/theme';
+// @ts-ignore
+import Video, {VideoProperties} from 'react-native-video';
 
 export const OrientationController = styled(View)(({theme}) => ({
   flexDirection: theme.dimensions.isLandScape ? 'row' : 'column',
@@ -95,3 +97,5 @@ export const GenreChip = styled(View)(({theme}) => ({
 export const Genre = styled(AppText)(({theme}) => ({
   color: theme.colors.white,
 }));
+
+export const VideoPlayer = styled(Video)<VideoProperties>({});

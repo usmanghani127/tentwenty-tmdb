@@ -37,7 +37,7 @@ export const UpcomingScreen = () => {
     <ScreenContainer testID={`${RouteKeys.Upcoming}: background`}>
       <UpcomingMoviesList
         key={isLandScape.toString()}
-        keyExtractor={({id}) => id.toString()}
+        keyExtractor={({id}, index) => index.toString() + id.toString()}
         data={results}
         extraData={{results, isLandScape}}
         renderItem={({item}) =>

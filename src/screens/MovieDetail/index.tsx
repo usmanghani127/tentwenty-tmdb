@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, ScreenContainer} from '../../components';
 import {
   ButtonsContainer,
@@ -14,6 +14,7 @@ import {
   Poster,
   PosterContent,
   ReleaseDate,
+  VideoPlayer,
 } from './styles.ts';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackNavigatorProps} from '../../navigation/types.ts';
@@ -21,19 +22,26 @@ import {RouteKeys} from '../../navigation/routes.ts';
 import {
   useGetConfigurationQuery,
   useGetMovieDetailsQuery,
+  useGetMovieVideosQuery,
 } from '../../services/api/movies.ts';
 import {When} from 'react-if';
 import {Colors} from '../../common/theme';
 import {Alert} from 'react-native';
+import {VideoRef} from 'react-native-video';
+import {MovieVideosType} from '../../services/api/types.ts';
 
 export const MovieDetail = (
   props: NativeStackScreenProps<StackNavigatorProps, RouteKeys.MovieDetails>,
 ) => {
+  const videoRef = useRef<VideoRef>(null);
+  const [movieTrailer, setMovieTrailer] = useState<MovieVideosType | null>(
+    null,
+  );
   const {data: {images: {posterSizes = [], secureBaseUrl = ''} = {}} = {}} =
     useGetConfigurationQuery();
 
   const {id} = props.route.params || {};
-  console.log({id});
+
   const {
     isError,
     data: {posterPath = '', releaseDate = '', overview = '', genres = []} = {},
@@ -44,6 +52,27 @@ export const MovieDetail = (
       Alert.alert('Error', 'An error occurred while fetching movie details');
     }
   }, [isError]);
+
+  const {isError: movieVideosAPIError, data: {results: movieVideos = []} = {}} =
+    useGetMovieVideosQuery({movieId: id});
+
+  useEffect(() => {
+    let video: MovieVideosType | null =
+      movieVideos.find(({type}) => type === 'Trailer') ||
+      movieVideos.find(({type}) => type === 'Teaser') ||
+      movieVideos.find(({type}) => type === 'Featurette') ||
+      null;
+    if (video) {
+      video = {
+        ...video,
+        url:
+          video?.site === 'YouTube'
+            ? `https://www.youtube.com/watch?v=${video.key}`
+            : '',
+      };
+    }
+    setMovieTrailer(video);
+  }, [movieVideos]);
 
   const imageUrl = `${secureBaseUrl}${
     posterSizes.length > 1
@@ -59,6 +88,13 @@ export const MovieDetail = (
     day: 'numeric',
   });
 
+  const resetVideo = () => {
+    videoRef?.current?.seek(0);
+    videoRef?.current?.pause();
+    videoRef?.current?.setFullScreen(false);
+  };
+
+  console.log({url: movieTrailer?.url});
   return (
     <ScreenContainer>
       <OrientationController>
@@ -74,12 +110,14 @@ export const MovieDetail = (
                     Alert.alert('Info', 'Navigate to Tickets Screen')
                   }
                 />
-                <Button
-                  kind={'outlined'}
-                  label={'Watch Trailer'}
-                  onPress={() => Alert.alert('Info', 'Watch Trailer')}
-                  Right={PlayIcon}
-                />
+                <When condition={!movieVideosAPIError}>
+                  <Button
+                    kind={'outlined'}
+                    label={'Watch Trailer'}
+                    onPress={() => videoRef.current?.presentFullscreenPlayer()}
+                    Right={PlayIcon}
+                  />
+                </When>
               </ButtonsContainer>
             </When>
           </PosterContent>
@@ -99,6 +137,19 @@ export const MovieDetail = (
           </DetailsSection>
         </DetailsContainer>
       </OrientationController>
+      <When condition={movieTrailer?.url}>
+        <VideoPlayer
+          ref={videoRef}
+          source={{uri: 'https://vjs.zencdn.net/v/oceans.mp4'}}
+          fullscreenAutorotate
+          onEnd={resetVideo}
+          onFullscreenPlayerDidDismiss={resetVideo}
+          onFullscreenPlayerDidPresent={videoRef?.current?.resume}
+          onVideoError={() =>
+            Alert.alert('Error', 'An error occurred while playing the trailer.')
+          }
+        />
+      </When>
     </ScreenContainer>
   );
 };
