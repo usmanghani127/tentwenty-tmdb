@@ -11,5 +11,6 @@ export const Colors = {
   pink: '#E26CA5',
   purple: '#564CA3',
   gold: '#CD9D0F',
-  darkBlue: '#202C43',
+  subHeading: '#202C43',
+  descriptionText: '#8F8F8F',
 };

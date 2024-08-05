@@ -1,14 +1,21 @@
 import React, {useEffect} from 'react';
-import {Container, UpcomingMoviesList} from './styles.ts';
+import {UpcomingMoviesList} from './styles.ts';
 import {RouteKeys} from '../../navigation/routes.ts';
 import {useLazyGetUpcomingMoviesQuery} from '../../services/api/movies.ts';
-import {MovieItem} from '../../components';
+import {MovieItem, ScreenContainer} from '../../components';
 import {ActivityIndicator, Alert, RefreshControl} from 'react-native';
 import {Colors} from '../../common/theme';
 import {useScreenDimensions} from '../../common/hooks/useScreenDimensions.ts';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {StackNavigatorProps} from '../../navigation/types.ts';
 
 export const UpcomingScreen = () => {
   const {isLandScape} = useScreenDimensions();
+  const {navigate} =
+    useNavigation<
+      NativeStackNavigationProp<StackNavigatorProps, RouteKeys.MovieDetails>
+    >();
   const [trigger, {data, isLoading, isError}] = useLazyGetUpcomingMoviesQuery();
   const {results = [], page = 0, totalPages = 1} = data ?? {};
 
@@ -26,20 +33,25 @@ export const UpcomingScreen = () => {
     }
   }, [isError]);
 
-  console.log({isLandScape});
   return (
-    <Container testID={`${RouteKeys.Upcoming}: background`}>
+    <ScreenContainer testID={`${RouteKeys.Upcoming}: background`}>
       <UpcomingMoviesList
         key={isLandScape.toString()}
         keyExtractor={({id}) => id.toString()}
         data={results}
-        extraData={results}
-        renderItem={({item}) => MovieItem({kind: 'poster', ...item})}
+        extraData={{results, isLandScape}}
+        renderItem={({item}) =>
+          MovieItem({
+            kind: 'poster',
+            onPress: () => navigate(RouteKeys.MovieDetails, {id: item.id}),
+            ...item,
+          })
+        }
         showsVerticalScrollIndicator={false}
         numColumns={isLandScape ? 2 : 1}
         refreshControl={
           <RefreshControl
-            tintColor={Colors.turquoise}
+            tintColor={Colors.primary}
             refreshing={isLoading}
             onRefresh={() => trigger({page: 1})}
           />
@@ -57,6 +69,6 @@ export const UpcomingScreen = () => {
           }
         }}
       />
-    </Container>
+    </ScreenContainer>
   );
 };

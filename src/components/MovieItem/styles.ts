@@ -1,22 +1,27 @@
-import {ImageBackgroundProps, View, ViewStyle} from 'react-native';
+import {ImageBackgroundProps, Pressable, View, ViewStyle} from 'react-native';
 import styled from 'styled-components';
 import {AppText} from '../AppText';
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
 
-export const Poster = styled(FastImage)<ImageBackgroundProps>(({theme}) => ({
-  width: theme.dimensions.isLandScape ? '45%' : '95%',
-  height: theme.dimensions.largerDimension * 0.25,
+export const MovieItemContainer = styled(Pressable)(({theme}) => ({
+  width: theme.dimensions.smallerDimension * 0.925,
   margin: 10,
+  alignItems: 'center',
+}));
+
+export const Poster = styled(FastImage)<ImageBackgroundProps>(({theme}) => ({
+  width: '100%',
+  height: theme.dimensions.largerDimension * 0.25,
   borderRadius: 20,
   justifyContent: 'flex-end',
 }));
 
 export const EmptyPoster = styled(View)<ViewStyle>(({theme}) => ({
-  width: theme.dimensions.width * 0.9,
-  height: theme.dimensions.height * 0.25,
+  width: '100%',
+  height: theme.dimensions.largerDimension * 0.25,
   borderRadius: 20,
-  marginVertical: 10,
+  justifyContent: 'flex-end',
   backgroundColor: theme.colors.black,
 }));
 

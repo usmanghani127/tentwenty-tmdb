@@ -2,6 +2,8 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {
   GetConfigurationResponseType,
+  GetMovieDetailsArgTypes,
+  GetMovieDetailsResponseType,
   GetUpcomingMoviesArgTypes,
   GetUpcomingMoviesResponseType,
 } from './types.ts';
@@ -20,6 +22,7 @@ export const moviesApi = createApi({
   endpoints: builder => ({
     getConfiguration: builder.query<GetConfigurationResponseType, void>({
       query: () => `/configuration?api_key=${TMDB_API_KEY}`,
+      serializeQueryArgs: ({endpointName}) => endpointName,
     }),
     getUpcomingMovies: builder.query<
       GetUpcomingMoviesResponseType,
@@ -40,9 +43,21 @@ export const moviesApi = createApi({
       forceRefetch: ({currentArg = 0, previousArg = 0}) =>
         currentArg > previousArg,
     }),
+    getMovieDetails: builder.query<
+      GetMovieDetailsResponseType,
+      GetMovieDetailsArgTypes
+    >({
+      query: ({movieId}) => `/movie/${movieId}?api_key=${TMDB_API_KEY}`,
+      serializeQueryArgs: ({endpointName}) => endpointName,
+      forceRefetch: ({currentArg = 0, previousArg = 0}) =>
+        currentArg !== previousArg,
+    }),
   }),
 });
 
-export const {useLazyGetUpcomingMoviesQuery, useGetConfigurationQuery} =
-  moviesApi;
+export const {
+  useLazyGetUpcomingMoviesQuery,
+  useGetConfigurationQuery,
+  useGetMovieDetailsQuery,
+} = moviesApi;
 export default moviesApi;

@@ -20,6 +20,7 @@ export type MovieItemType = {
 export type MovieItemProps = MovieItemType & {
   kind: 'poster' | 'tile';
   styles?: ViewStyle;
+  onPress?: () => void;
 };
 
 export type MoviePosterType = {

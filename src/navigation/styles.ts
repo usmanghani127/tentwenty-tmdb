@@ -17,7 +17,7 @@ export const TabBarStyles = {
 };
 
 export const HeaderTitleStyles = {
-  color: Colors.darkBlue,
+  color: Colors.subHeading,
 };
 
 export const TabBarBackground = styled(View)(

@@ -1,17 +1,25 @@
 import React from 'react';
 import {MovieItemProps, MoviePosterType} from './types.ts';
-import {EmptyPoster, Poster, PosterGradient, Title} from './styles.ts';
+import {
+  EmptyPoster,
+  MovieItemContainer,
+  Poster,
+  PosterGradient,
+  Title,
+} from './styles.ts';
 import {Else, If, Then, When} from 'react-if';
-import {useGetConfigurationQuery} from '../../services/api/movies.ts';
 import {Colors} from '../../common/theme';
+import {useGetConfigurationQuery} from '../../services/api/movies.ts';
 
 export const MovieItem = (props: MovieItemProps) => {
-  const {title, posterPath = '', kind = 'poster'} = props;
+  const {title, posterPath = '', kind = 'poster', onPress = () => {}} = props;
 
   return (
-    <When condition={kind === 'poster'}>
-      <MoviePoster url={posterPath} title={title} />
-    </When>
+    <MovieItemContainer onPress={onPress}>
+      <When condition={kind === 'poster'}>
+        <MoviePoster url={posterPath} title={title} />
+      </When>
+    </MovieItemContainer>
   );
 };
 
@@ -45,7 +53,10 @@ export const MoviePoster = ({
           </EmptyPoster>
         </Then>
         <Else>
-          <Poster source={{uri: imageUrl}} style={styles}>
+          <Poster
+            source={{uri: imageUrl}}
+            style={styles}
+            resizeMode={'stretch'}>
             <MovieTitle title={title} />
           </Poster>
         </Else>

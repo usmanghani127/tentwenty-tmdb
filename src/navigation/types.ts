@@ -1,11 +1,12 @@
 import {RouteKeys} from './routes.ts';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MovieItemType} from '../components/MovieItem/types.ts';
 
 export type StackNavigatorProps = {
   [RouteKeys.Home]: undefined;
   [RouteKeys.Upcoming]: undefined;
   [RouteKeys.Search]: undefined;
-  [RouteKeys.MovieDetails]: undefined;
+  [RouteKeys.MovieDetails]: {id: MovieItemType['id']};
 };
 
 export type TabNavigatorProps = {
