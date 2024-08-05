@@ -1,17 +1,16 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../common/theme/Colors.ts';
-import {Fonts} from '../../common/theme/Fonts.ts';
+import styled, {DefaultTheme} from 'styled-components';
+import {FlatList, FlatListProps, View} from 'react-native';
+import {MovieItemType} from '../../components/MovieItem/types.ts';
 
-export default StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: Colors.black,
-    fontSize: 50,
-    fontFamily: Fonts.family.thin,
-  },
+export const Container = styled(View)(({theme}: {theme: DefaultTheme}) => ({
+  backgroundColor: theme.colors.background,
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingHorizontal: 10,
+}));
+
+export const UpcomingMoviesList = styled(FlatList)<
+  FlatListProps<MovieItemType>
+>({
+  width: '100%',
 });

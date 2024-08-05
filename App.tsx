@@ -10,11 +10,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {StackNavigator} from './src/navigation/StackNavigator.tsx';
 import SplashScreen from 'react-native-splash-screen';
 import {PaperProvider} from 'react-native-paper';
-import {ApiProvider} from '@reduxjs/toolkit/query/react';
-import {api} from './src/services/api';
 import {ThemeProvider} from 'styled-components';
 import {Colors, Fonts} from './src/common/theme';
 import {useScreenDimensions} from './src/common/hooks/useScreenDimensions.ts';
+import {Provider} from 'react-redux';
+import store from './src/services/store';
 
 function App(): React.JSX.Element {
   const dimensions = useScreenDimensions();
@@ -31,13 +31,13 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer>
-      <ApiProvider api={api}>
+      <Provider store={store}>
         <ThemeProvider theme={theme}>
           <PaperProvider>
             <StackNavigator />
           </PaperProvider>
         </ThemeProvider>
-      </ApiProvider>
+      </Provider>
     </NavigationContainer>
   );
 }

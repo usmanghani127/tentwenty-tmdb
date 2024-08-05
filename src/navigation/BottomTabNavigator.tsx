@@ -7,19 +7,21 @@ import {
   MediaLibraryScreen,
   MoreScreen,
   SearchScreen,
+  UpcomingScreen,
 } from '../screens';
 import {
   BottomTabButtonLabel,
+  HeaderTitleStyles,
   TabBarBackground,
   TabBarStyles,
 } from './styles.ts';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {UpcomingScreen} from '../screens/Upcoming';
 import {DashboardTabIcon} from '../assets/graphics/DashboardTabIcon.tsx';
 import {WatchTabIcon} from '../assets/graphics/WatchTabIcon.tsx';
 import {MediaLibraryTabIcon} from '../assets/graphics/MediaLibraryTabIcon.tsx';
 import {MoreTabIcon} from '../assets/graphics/MoreTabIcon.tsx';
 import {LabelPosition} from '@react-navigation/bottom-tabs/lib/typescript/src/types';
+import {VectorIcon} from '../components';
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorProps>();
 
@@ -47,6 +49,17 @@ const WatchTabStack = () => (
     <WatchTabStackNavigator.Screen
       name={RouteKeys.Upcoming}
       component={UpcomingScreen}
+      options={{
+        headerTitle: 'Watch',
+        headerTitleAlign: 'left',
+        headerTitleStyle: HeaderTitleStyles,
+        headerRight: () =>
+          VectorIcon({
+            name: 'magnify',
+            type: 'MaterialCommunityIcons',
+            size: 30,
+          }),
+      }}
     />
     <WatchTabStackNavigator.Screen
       name={RouteKeys.Search}

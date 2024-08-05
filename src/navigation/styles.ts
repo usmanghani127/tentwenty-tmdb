@@ -1,19 +1,23 @@
-import {DefaultTheme} from 'styled-components';
-import styled from 'styled-components/native';
-import {AppText} from '../components/AppText';
+import styled, {DefaultTheme} from 'styled-components';
+import {AppText} from '../components';
 import {View} from 'react-native';
 import {Colors} from '../common/theme';
 
-export const BottomTabButtonLabel = styled(AppText)(
-  ({theme, isActive}: {theme: DefaultTheme; isActive: boolean}) => ({
-    color: isActive ? theme.colors.white : theme.colors.grey,
-  }),
-);
+export const BottomTabButtonLabel = styled(AppText)<{
+  theme: DefaultTheme;
+  isActive: boolean;
+}>(({theme, isActive}) => ({
+  color: isActive ? theme.colors.white : theme.colors.grey,
+}));
 
 export const TabBarStyles = {
   backgroundColor: Colors.background,
   borderTopWidth: 0,
   elevation: 0,
+};
+
+export const HeaderTitleStyles = {
+  color: Colors.darkBlue,
 };
 
 export const TabBarBackground = styled(View)(
