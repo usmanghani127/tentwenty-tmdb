@@ -7,7 +7,6 @@
 
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {StackNavigator} from './src/navigation/StackNavigator.tsx';
 import SplashScreen from 'react-native-splash-screen';
 import {PaperProvider} from 'react-native-paper';
 import {ThemeProvider} from 'styled-components';
@@ -15,6 +14,7 @@ import {Colors, Fonts} from './src/common/theme';
 import {useScreenDimensions} from './src/common/hooks/useScreenDimensions.ts';
 import {Provider} from 'react-redux';
 import store from './src/services/store';
+import {BottomTabNavigator} from './src/navigation/BottomTabNavigator.tsx';
 
 function App(): React.JSX.Element {
   const dimensions = useScreenDimensions();
@@ -34,7 +34,7 @@ function App(): React.JSX.Element {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <PaperProvider>
-            <StackNavigator />
+            <BottomTabNavigator />
           </PaperProvider>
         </ThemeProvider>
       </Provider>

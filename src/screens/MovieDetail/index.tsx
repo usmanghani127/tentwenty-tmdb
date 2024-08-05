@@ -22,7 +22,7 @@ import {RouteKeys} from '../../navigation/routes.ts';
 import {
   useGetConfigurationQuery,
   useGetMovieDetailsQuery,
-  useGetMovieVideosQuery,
+  useLazyGetMovieVideosQuery,
 } from '../../services/api/movies.ts';
 import {When} from 'react-if';
 import {Colors} from '../../common/theme';
@@ -53,8 +53,16 @@ export const MovieDetail = (
     }
   }, [isError]);
 
-  const {isError: movieVideosAPIError, data: {results: movieVideos = []} = {}} =
-    useGetMovieVideosQuery({movieId: id});
+  const [
+    trigger,
+    {isError: movieVideosAPIError, data: {results: movieVideos = []} = {}},
+  ] = useLazyGetMovieVideosQuery();
+
+  useEffect(() => {
+    if (movieVideosAPIError) {
+      Alert.alert('Error', 'An error occurred while playing the movie trailer');
+    }
+  }, [movieVideosAPIError]);
 
   useEffect(() => {
     let video: MovieVideosType | null =
@@ -94,7 +102,6 @@ export const MovieDetail = (
     videoRef?.current?.setFullScreen(false);
   };
 
-  console.log({url: movieTrailer?.url});
   return (
     <ScreenContainer>
       <OrientationController>
@@ -110,14 +117,15 @@ export const MovieDetail = (
                     Alert.alert('Info', 'Navigate to Tickets Screen')
                   }
                 />
-                <When condition={!movieVideosAPIError}>
-                  <Button
-                    kind={'outlined'}
-                    label={'Watch Trailer'}
-                    onPress={() => videoRef.current?.presentFullscreenPlayer()}
-                    Right={PlayIcon}
-                  />
-                </When>
+                <Button
+                  kind={'outlined'}
+                  label={'Watch Trailer'}
+                  onPress={() => {
+                    trigger({movieId: id});
+                    videoRef.current?.presentFullscreenPlayer();
+                  }}
+                  Right={PlayIcon}
+                />
               </ButtonsContainer>
             </When>
           </PosterContent>
@@ -137,19 +145,18 @@ export const MovieDetail = (
           </DetailsSection>
         </DetailsContainer>
       </OrientationController>
-      <When condition={movieTrailer?.url}>
-        <VideoPlayer
-          ref={videoRef}
-          source={{uri: 'https://vjs.zencdn.net/v/oceans.mp4'}}
-          fullscreenAutorotate
-          onEnd={resetVideo}
-          onFullscreenPlayerDidDismiss={resetVideo}
-          onFullscreenPlayerDidPresent={videoRef?.current?.resume}
-          onVideoError={() =>
-            Alert.alert('Error', 'An error occurred while playing the trailer.')
-          }
-        />
-      </When>
+      <VideoPlayer
+        ref={videoRef}
+        source={{uri: 'https://vjs.zencdn.net/v/oceans.mp4'}}
+        fullscreenAutorotate
+        onEnd={resetVideo}
+        paused={!movieTrailer}
+        onFullscreenPlayerDidDismiss={resetVideo}
+        onFullscreenPlayerDidPresent={movieTrailer && videoRef?.current?.resume}
+        onVideoError={() =>
+          Alert.alert('Error', 'An error occurred while playing the trailer.')
+        }
+      />
     </ScreenContainer>
   );
 };

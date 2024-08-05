@@ -1,11 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {StackNavigatorProps, TabNavigatorProps} from './types';
 import {RouteKeys} from './routes.ts';
 import {
   DashboardScreen,
   MediaLibraryScreen,
   MoreScreen,
+  MovieDetail,
   SearchScreen,
   UpcomingScreen,
 } from '../screens';
@@ -22,6 +23,8 @@ import {MediaLibraryTabIcon} from '../assets/graphics/MediaLibraryTabIcon.tsx';
 import {MoreTabIcon} from '../assets/graphics/MoreTabIcon.tsx';
 import {LabelPosition} from '@react-navigation/bottom-tabs/lib/typescript/src/types';
 import {VectorIcon} from '../components';
+import {Colors, Fonts} from '../common/theme';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorProps>();
 
@@ -44,33 +47,59 @@ const TabBarLabel = ({
   );
 };
 
-const WatchTabStack = () => (
-  <WatchTabStackNavigator.Navigator>
-    <WatchTabStackNavigator.Screen
-      name={RouteKeys.Upcoming}
-      component={UpcomingScreen}
-      options={{
-        headerTitle: 'Watch',
-        headerTitleAlign: 'left',
-        headerTitleStyle: HeaderTitleStyles,
-        headerRight: () =>
-          VectorIcon({
-            name: 'magnify',
-            type: 'MaterialCommunityIcons',
-            size: 30,
-          }),
-      }}
-    />
-    <WatchTabStackNavigator.Screen
-      name={RouteKeys.Search}
-      component={SearchScreen}
-    />
-  </WatchTabStackNavigator.Navigator>
-);
+// @ts-ignore
+const WatchTabStack = ({navigation, route}) => {
+  useLayoutEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    const showTabBar = ![RouteKeys.MovieDetails].includes(
+      routeName as RouteKeys,
+    );
+    navigation.setOptions({
+      tabBarStyle: {display: showTabBar ? 'flex' : 'none'},
+    });
+  }, [navigation, route]);
+
+  return (
+    <WatchTabStackNavigator.Navigator>
+      <WatchTabStackNavigator.Screen
+        name={RouteKeys.Upcoming}
+        component={UpcomingScreen}
+        options={{
+          headerTitle: 'Watch',
+          headerTitleAlign: 'left',
+          headerTitleStyle: HeaderTitleStyles,
+          headerRight: () =>
+            VectorIcon({
+              name: 'magnify',
+              type: 'MaterialCommunityIcons',
+              size: 30,
+            }),
+        }}
+      />
+      <WatchTabStackNavigator.Screen
+        name={RouteKeys.Search}
+        component={SearchScreen}
+      />
+      <WatchTabStackNavigator.Screen
+        name={RouteKeys.MovieDetails}
+        component={MovieDetail}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTintColor: Colors.white,
+          headerBackTitleStyle: {
+            fontFamily: Fonts.family.semiBold,
+          },
+          headerTitle: '',
+          statusBarStyle: 'light',
+        }}
+      />
+    </WatchTabStackNavigator.Navigator>
+  );
+};
 
 export const BottomTabNavigator = () => {
   const [currentRoute, setCurrentRoute] = useState(RouteKeys.Watch);
-
   return (
     <TabNavigator.Navigator
       initialRouteName={RouteKeys.Watch}
