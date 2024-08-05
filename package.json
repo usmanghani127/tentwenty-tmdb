@@ -20,7 +20,7 @@
     "clean:interactive": "react-native clean-project",
     "clean:all": "react-native clean-project-auto; rm -rf yarn.lock, rm -rf ios/Podfile.lock; yarn install:all",
     "install:pods": "pod install --project-directory=ios --verbose",
-    "install:all": "yarn install; yarn install:pods",
+    "install:pods:release": "NO_FLIPPER=1 pod install --project-directory=ios --verbose",
     "release:apk": "cd android; ./gradlew :app:assembleRelease",
     "debug:apk": "cd android; ./gradlew :app:assembleDebug",
     "release:aab": "cd android; ./gradlew :app:bundleRelease",

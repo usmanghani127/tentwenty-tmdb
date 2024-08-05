@@ -19,11 +19,19 @@ This project was created using the following version of the development tools:
 ## Running App
 ### Step 1: Installing dependency packages
 
-Install React Native and Cocoapods dependencies using this command:
-
-
+- Install React Native dependencies:
 ```bash
-yarn install:all
+yarn install
+```
+
+- Install Cocoapods dependencies for Debug mode:
+```bash
+yarn install:pods
+```
+
+- Install Cocoapods dependencies for Release mode, which removes Flipper:
+```bash
+yarn install:pods:release
 ```
 
 ### Step 2: Start the Metro Server
